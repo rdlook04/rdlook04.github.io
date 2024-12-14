@@ -3,12 +3,46 @@
 <head>
     <title>Layout desde JSON con Dropzone</title>
     <style>
-        body { margin: 0; }
-        #contenedorCanvas {
-            position: relative;
-            display: inline-block;
+    
+        body { 
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          font-family: Arial, sans-serif;
+    }
+        
+       #contenedor {
+    width: 800px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+        #header h1 { /* Header title */
+            margin: 0;
         }
-        canvas { display: block; }
+        
+        
+        #contenedorCanvas {
+          position: relative;
+          display: inline-block;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        canvas { 
+          display: block;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          }
         .boton-canvas {
             position: absolute;
             background-color: rgba(0, 0, 0, 0.5);
@@ -50,6 +84,9 @@
     </style>
 </head>
 <body>
+    <div id="contenedor">
+        <div id="header">
+        
     <div id="dropzone">Arrastra y suelta aquí tu Dashboard V3.0 en JSON</div>
     
     <div class="slider-container">
@@ -70,7 +107,8 @@
         <button id="copiarBtn" class="boton-canvas">Copiar Imagen</button>
         <button id="copiarBase64Btn" class="boton-canvas">Copiar Base64</button>
     </div>
-
+ </div>
+  </div>
     <script>
         const canvas = document.getElementById('miCanvas');
         const ctx = canvas.getContext('2d');
