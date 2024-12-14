@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Layout desde JSON con Dropzone</title>
+
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <style>
-    
-        body { 
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          font-family: Arial, sans-serif;
-    }
-        
-       #contenedor {
-    width: 800px;
-    padding: 20px;
-    background-color: #f0f0f0;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
 
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+        #contenedor {
+            width: 800px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-        #header h1 { /* Header title */
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #header h1 {
+            /* Header title */
             margin: 0;
         }
-        
-        
+
+
         #contenedorCanvas {
-          position: relative;
-          display: inline-block;
-          text-align: center;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        canvas { 
-          display: block;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          }
+
+        canvas {
+            display: block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .boton-canvas {
             position: absolute;
             background-color: rgba(0, 0, 0, 0.5);
@@ -54,23 +62,40 @@ header {
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        #contenedorCanvas:hover .boton-canvas { opacity: 1; }
-        #descargarBtn { top: 10px; right: 10px; }
-        #copiarBtn { top: 45px; right: 10px; }
-        #copiarBase64Btn { top: 80px; right: 10px; }
-        #dropzone {
-          border: 2px dashed #ccc;
-          padding: 20px;
-          text-align: center;
-          cursor: pointer;
-          margin-bottom: 20px;
+
+        #contenedorCanvas:hover .boton-canvas {
+            opacity: 1;
         }
+
+        #descargarBtn {
+            top: 10px;
+            right: 10px;
+        }
+
+        #copiarBtn {
+            top: 45px;
+            right: 10px;
+        }
+
+        #copiarBase64Btn {
+            top: 80px;
+            right: 10px;
+        }
+
+        #dropzone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
         #dropzone.highlight {
             border-color: #007bff;
             background-color: #e9f2fb;
         }
-        
-           .slider-container {
+
+        .slider-container {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
@@ -78,37 +103,64 @@ header {
 
         .slider-label {
             margin-right: 10px;
-            width: 80px; /* Ajusta según necesidad */
+            width: 80px;
+            /* Ajusta según necesidad */
         }
 
+        .notification {
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            opacity: 1;
+            transition: opacity 1.5s ease-in-out, visibility 1s 0.5s;
+            /* Retrasa la visibilidad */
+        }
+
+        .mostrar {
+            opacity: 1;
+            transition: opacity 1.5s ease-in-out, visibility 1s 0.5s;
+            /* Retrasa la visibilidad */
+            visibility: visible;
+        }
     </style>
 </head>
+
 <body>
+
+
+
     <div id="contenedor">
         <div id="header">
-        
-    <div id="dropzone">Arrastra y suelta aquí tu Dashboard V3.0 en JSON</div>
-    
-    <div class="slider-container">
-        <label for="hueStartSlider" class="slider-label">Hue Start:</label>
-        <input type="range" id="hueStartSlider" min="0" max="360" value="90">
-        <span id="hueStartValue">90</span>
-    </div>
+        </div>
 
-    <div class="slider-container">
-        <label for="hueEndSlider" class="slider-label">Hue End:</label>
-        <input type="range" id="hueEndSlider" min="0" max="360" value="120">
-        <span id="hueEndValue">120</span>
-    </div>
 
-    <div id="contenedorCanvas">
-        <canvas id="miCanvas"></canvas>
-        <button id="descargarBtn" class="boton-canvas">Descargar</button>
-        <button id="copiarBtn" class="boton-canvas">Copiar Imagen</button>
-        <button id="copiarBase64Btn" class="boton-canvas">Copiar Base64</button>
+
+        <div id="dropzone">Arrastra y suelta aquí tu Dashboard V3.0 en JSON</div>
+
+        <div class="slider-container">
+            <label for="hueStartSlider" class="slider-label">Hue Start:</label>
+            <input type="range" id="hueStartSlider" min="0" max="360" value="90">
+            <span id="hueStartValue">90</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="hueEndSlider" class="slider-label">Hue End:</label>
+            <input type="range" id="hueEndSlider" min="0" max="360" value="120">
+            <span id="hueEndValue">120</span>
+        </div>
+
+        <div id="contenedorCanvas">
+            <canvas id="miCanvas"></canvas>
+            <button id="descargarBtn" class="boton-canvas">Descargar</button>
+            <button id="copiarBtn" class="boton-canvas">Copiar Imagen</button>
+            <button id="copiarBase64Btn" class="boton-canvas">Copiar Base64</button>
+        </div>
+        <div id="notificacion">
+        </div>
+
     </div>
- </div>
-  </div>
     <script>
         const canvas = document.getElementById('miCanvas');
         const ctx = canvas.getContext('2d');
@@ -120,90 +172,107 @@ header {
 
         let layouts = {}; // Variable para almacenar los layouts del JSON
 
-        
-      hueStartSlider.addEventListener("input", (event) => {
-          hueStartValue.textContent = event.target.value;
-          drawLayouts();
-      });
-      hueEndSlider.addEventListener("input", (event) => {
-        hueEndValue.textContent = event.target.value;
-        drawLayouts();
-      });
 
-      function drawLayouts() {
-    if (Object.keys(layouts).length === 0) return;
+        hueStartSlider.addEventListener("input", (event) => {
+            hueStartValue.textContent = event.target.value;
+            drawLayouts();
+        });
+        hueEndSlider.addEventListener("input", (event) => {
+            hueEndValue.textContent = event.target.value;
+            drawLayouts();
+        });
 
-    const dimensions = Object.values(layouts).reduce((acc, layout) => {
-        return {
-            maxX: Math.max(acc.maxX, layout.x + layout.w),
-            maxY: Math.max(acc.maxY, layout.y + layout.h)
-        };
-    }, { maxX: 0, maxY: 0 });
 
-    let layoutWidth = dimensions.maxX * cellSize;
-    let layoutHeight = dimensions.maxY * cellSize;
+        function mostrarNotificacion(mensaje) {
+            const notificacion = document.getElementById('notificacion');
+            notificacion.classList.add('notification');
+            notificacion.textContent = mensaje;
 
-    let canvasWidth = layoutWidth;
-    let canvasHeight = layoutHeight;
-
-    if (layoutWidth / layoutHeight < 16 / 9) {
-        canvasWidth = layoutHeight * (16 / 9);
-    } else if (layoutWidth / layoutHeight > 16 / 9) {
-        canvasHeight = layoutWidth * (9 / 16);
-    }
-
-    canvas.width = Math.ceil(canvasWidth);
-    canvas.height = Math.ceil(canvasHeight);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const offsetX = (canvas.width - layoutWidth) / 2;
-    const offsetY = (canvas.height - layoutHeight) / 2;
-
-    const numGrupos = 5;
-    let hueStart = parseInt(hueStartSlider.value, 10);
-    let hueEnd = parseInt(hueEndSlider.value, 10);
-    const hueStep = (hueEnd - hueStart) / (numGrupos - 1);
-    const layoutKeys = Object.keys(layouts).map(Number).sort((a, b) => a - b);
-    let grupoActual = 0;
-
-    for (let i = 0; i < layoutKeys.length; i++) {
-        const key = layoutKeys[i];
-        const layout = layouts[key];
-        const hue = hueStart + (grupoActual * hueStep);
-        ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
-
-        ctx.fillRect(offsetX + layout.x * cellSize, offsetY + layout.y * cellSize, layout.w * cellSize, layout.h * cellSize);
-        ctx.strokeRect(offsetX + layout.x * cellSize, offsetY + layout.y * cellSize, layout.w * cellSize, layout.h * cellSize);
-
-        if ((i + 1) % 5 === 0) {
-            grupoActual = (grupoActual + 1) % numGrupos;
+            notificacion.style.display = 'block'  ;
+ 
+            // Ocultar la notificación después de unos segundos
+            setTimeout(() => {
+                notificacion.style.display = 'none';
+            }, 3000);
         }
-    }
-}
 
-//Dentro del Evento Drop
-dropzone.addEventListener('drop', (e) => {
-    //... resto del codigo del drop
-    reader.onload = (event) => {
-                    try {
-                        const jsonData = JSON.parse(event.target.result);
-                        layouts = jsonData.layouts;
-                        drawLayouts(); //Aqui se llama a la funcion para dibujar.
-                    } catch (error) {
-                       //...resto del codigo
-                    }
+        function drawLayouts() {
+            if (Object.keys(layouts).length === 0) return;
+
+            const dimensions = Object.values(layouts).reduce((acc, layout) => {
+                return {
+                    maxX: Math.max(acc.maxX, layout.x + layout.w),
+                    maxY: Math.max(acc.maxY, layout.y + layout.h)
                 };
-    //...resto del codigo del drop
-});
+            }, { maxX: 0, maxY: 0 });
+
+            let layoutWidth = dimensions.maxX * cellSize;
+            let layoutHeight = dimensions.maxY * cellSize;
+
+            let canvasWidth = layoutWidth;
+            let canvasHeight = layoutHeight;
+
+            if (layoutWidth / layoutHeight < 16 / 9) {
+                canvasWidth = layoutHeight * (16 / 9);
+            } else if (layoutWidth / layoutHeight > 16 / 9) {
+                canvasHeight = layoutWidth * (9 / 16);
+            }
+
+            canvas.width = Math.ceil(canvasWidth);
+            canvas.height = Math.ceil(canvasHeight);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const offsetX = (canvas.width - layoutWidth) / 2;
+            const offsetY = (canvas.height - layoutHeight) / 2;
+
+            const numGrupos = 5;
+            let hueStart = parseInt(hueStartSlider.value, 10);
+            let hueEnd = parseInt(hueEndSlider.value, 10);
+            const hueStep = (hueEnd - hueStart) / (numGrupos - 1);
+            const layoutKeys = Object.keys(layouts).map(Number).sort((a, b) => a - b);
+            let grupoActual = 0;
+
+            for (let i = 0; i < layoutKeys.length; i++) {
+                const key = layoutKeys[i];
+                const layout = layouts[key];
+                const hue = hueStart + (grupoActual * hueStep);
+                ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+
+                ctx.fillRect(offsetX + layout.x * cellSize, offsetY + layout.y * cellSize, layout.w * cellSize, layout.h * cellSize);
+                ctx.strokeRect(offsetX + layout.x * cellSize, offsetY + layout.y * cellSize, layout.w * cellSize, layout.h * cellSize);
+
+                if ((i + 1) % 5 === 0) {
+                    grupoActual = (grupoActual + 1) % numGrupos;
+                }
+            }
+        }
+
+
+
+
+        //Dentro del Evento Drop
+        dropzone.addEventListener('drop', (e) => {
+            //... resto del codigo del drop
+            reader.onload = (event) => {
+                try {
+                    const jsonData = JSON.parse(event.target.result);
+                    layouts = jsonData.layouts;
+                    drawLayouts(); //Aqui se llama a la funcion para dibujar.
+                } catch (error) {
+                    //...resto del codigo
+                }
+            };
+            //...resto del codigo del drop
+        });
 
 
         dropzone.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          dropzone.classList.add('highlight');
+            e.preventDefault();
+            dropzone.classList.add('highlight');
         });
 
         dropzone.addEventListener('dragleave', () => {
-          dropzone.classList.remove('highlight');
+            dropzone.classList.remove('highlight');
         });
 
         dropzone.addEventListener('drop', (e) => {
@@ -222,32 +291,36 @@ dropzone.addEventListener('drop', (e) => {
                         drawLayouts();
                     } catch (error) {
                         console.error("Error al parsear el JSON:", error);
-                        alert("El archivo JSON no es válido.");
+                        toastr.info("El archivo JSON no es válido.");
                     }
                 };
 
                 reader.onerror = () => {
-                  console.error("Error al leer el archivo.");
-                  alert("Error al leer el archivo.");
+                    console.error("Error al leer el archivo.");
+                    toastr.info("Error al leer el archivo.");
                 }
                 reader.readAsText(file);
             } else {
-                alert("Por favor, arrastra un archivo JSON válido.");
+                toastr.info("Por favor, arrastra un archivo JSON válido.");
             }
         });
 
         // ... (Resto del código: generarUUIDCorto, eventos de los botones descargar, copiar y copiarBase64. Sin cambios importantes.)
-         function generarUUIDCorto() {
+        function generarUUIDCorto() {
             return crypto.randomUUID().substring(0, 10);
         }
 
-        descargarBtn.addEventListener('click', function() {
+        descargarBtn.addEventListener('click', function () {
+
             const nombreArchivo = `layout_${generarUUIDCorto()}.png`;
             const link = document.createElement('a');
             link.download = nombreArchivo;
             link.href = canvas.toDataURL('image/png');
             link.click();
             link.remove();
+            toastr.success('Descarga iniciada');
+            // mostrarNotificacion('Tu acción se ha realizado correctamente.');
+
         });
 
         copiarBtn.addEventListener('click', async () => {
@@ -258,31 +331,34 @@ dropzone.addEventListener('drop', (e) => {
                         return;
                     }
                     try {
-                         await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-                         alert("Imagen copiada al portapapeles");
+                        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+                        // alert("Imagen copiada al portapapeles");
+                        toastr.success('Imagen copiada al portapapeles');
                     } catch (clipboardError) {
                         console.error("Error al copiar al portapapeles:", clipboardError);
-                        alert("Error al copiar la imagen. Asegúrate de que el sitio se sirva por HTTPS."); // Mensaje más claro
+                        toastr.error('Error al copiar la imagen. Asegúrate de que el sitio se sirva por HTTPS.');
+                        // alert("Error al copiar la imagen. Asegúrate de que el sitio se sirva por HTTPS."); // Mensaje más claro
                     }
                 }, 'image/png').catch(blobError => { // Captura errores en toBlob
                     console.error("Error en toBlob:", blobError);
                     alert("Error al procesar la imagen.");
                 });
             } catch (errorGeneral) {
-                // console.error("Error general en la función de copiar:", errorGeneral);
-                // alert("Ocurrió un error al intentar copiar la imagen.");
+                console.error("Error general en la función de copiar:", errorGeneral);
+                toastr.success("Ocurrió un error al intentar copiar la imagen.");
             }
         });
 
-        copiarBase64Btn.addEventListener('click', function() {
+        copiarBase64Btn.addEventListener('click', function () {
             const base64 = canvas.toDataURL('image/png');
             navigator.clipboard.writeText(base64).then(() => {
-                alert("Base64 copiado al portapapeles");
+                toastr.success("Base64 copiado al portapapeles");
             }).catch(err => {
                 console.error('Error al copiar Base64: ', err);
-                alert("Tu navegador no soporta copiar al portapapeles o el sitio no es HTTPS"); //mensaje mas descriptivo
+                toastr.success("Tu navegador no soporta copiar al portapapeles o el sitio no es HTTPS"); //mensaje mas descriptivo
             });
         });
     </script>
 </body>
+
 </html>
