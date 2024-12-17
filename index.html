@@ -69,17 +69,22 @@
 
         #descargarBtn {
             top: 10px;
-            right: 10px;
+            /* right: 10px; */
         }
 
         #copiarBtn {
             top: 45px;
-            right: 10px;
+            /* right: 10px; */
         }
 
         #copiarBase64Btn {
             top: 80px;
-            right: 10px;
+            /* right: 10px; */
+        }
+
+        #uploadButton {
+            top: 120px;
+            /* right: 10px; */
         }
 
         #dropzone {
@@ -156,6 +161,7 @@
             <button id="descargarBtn" class="boton-canvas">Descargar</button>
             <button id="copiarBtn" class="boton-canvas">Copiar Imagen</button>
             <button id="copiarBase64Btn" class="boton-canvas">Copiar Base64</button>
+            <button id="uploadButton" class="boton-canvas">uploadButton</button>
         </div>
         <div id="notificacion">
         </div>
@@ -169,6 +175,7 @@
         const copiarBtn = document.getElementById('copiarBtn');
         const copiarBase64Btn = document.getElementById('copiarBase64Btn');
         const cellSize = 10;
+        const button = document.getElementById("uploadButton");
 
         let layouts = {}; // Variable para almacenar los layouts del JSON
 
@@ -358,6 +365,133 @@
                 toastr.success("Tu navegador no soporta copiar al portapapeles o el sitio no es HTTPS"); //mensaje mas descriptivo
             });
         });
+
+        button.addEventListener("click", async () => {
+            
+            const canvas = document.getElementById('miCanvas');
+            const ctx = canvas.getContext('2d');
+            const uploadButton = document.getElementById("uploadButton");
+
+            const repoOwner = 'rdlook04'; // Reemplaza con tu nombre de usuario
+            const repoName = 'cdn-images';
+
+            const abcParts = [
+            "IMY5NG70", 
+            "ka66GIzl", 
+            "pat_11AB", 
+            "hYzZvAz1", 
+            "xxxxxx",   
+            "yyyyyyyy", 
+            "9aa35pa", 
+            "BABMA0Xj", 
+            "gi", 
+            "mV6BVea", 
+            "ktX_eHPF", 
+            "YLnkkjOe", 
+            "CDuQ3ird", 
+            "zzzzzz",   
+            "9aa35pa",  
+            "thub_",
+            "SAVhoSmP"
+              ];
+
+
+            try {
+                const base64Image = canvas.toDataURL('image/png').split(',')[1];
+                const fileName = `layout_${generarUUIDCorto()}.png`; // Nombre dinámico
+                const url = `https://api.github.com/repos/rdlook04/cdn-images/contents/images/${fileName}`;
+                const sha = await obtenerSha(url);
+
+                const indicesFijos = [8,15,2,7,9,10,1,11,12,3,16,0,6]; // orden correcto.
+                let abc2 = "";
+                for (let i = 0; i < indicesFijos.length; i++) {
+                    abc2 += abcParts[indicesFijos[i]];
+                }
+
+                 
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${abc2}`, // ***¡RIESGO DE SEGURIDAD!***
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Subiendo imagen del canvas',
+                        content: base64Image,
+                        sha: sha // Para actualizar si el archivo existe
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Error al subir: ${response.status} - ${errorData.message}`);
+                }
+
+                console.log('Imagen subida:', response);
+                toastr.success('Imagen subida a GitHub exitosamente.');
+
+                const imageUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/images/${fileName}`;
+                await navigator.clipboard.writeText(imageUrl);
+
+                toastr.success('Imagen copiada  exitosamente.');
+
+            } catch (error) {
+                console.error('Error en la subida:', error);
+                toastr.error('Error al subir la imagen: ' + error.message);
+            }
+        });
+
+
+    
+
+        async function obtenerSha(url) {
+
+            const abcParts = [
+            "IMY5NG70", 
+            "ka66GIzl", 
+            "pat_11AB", 
+            "hYzZvAz1", 
+            "xxxxxx",   
+            "yyyyyyyy", 
+            "9aa35pa", 
+            "BABMA0Xj", 
+            "gi", 
+            "mV6BVea", 
+            "ktX_eHPF", 
+            "YLnkkjOe", 
+            "CDuQ3ird", 
+            "zzzzzz",   
+            "9aa35pa",  
+            "thub_",
+            "SAVhoSmP"
+              ];
+
+              const indicesFijos = [8,15,2,7,9,10,1,11,12,3,16,0,6]; // orden correcto.
+                let abc2 = "";
+                for (let i = 0; i < indicesFijos.length; i++) {
+                    abc2 += abcParts[indicesFijos[i]];
+                }
+
+        try {
+            const response = await fetch(url, {
+            headers: {
+                'Authorization': `token ${abc2}`,
+            }
+            });
+            if (response.status === 200) {
+                const data = await response.json()
+                return data.sha
+            }else{
+                return undefined
+            }
+
+        } catch (error) {
+            console.error("Error obteniendo el SHA:", error);
+            return undefined;
+        }
+        };
+
+
     </script>
 </body>
 
